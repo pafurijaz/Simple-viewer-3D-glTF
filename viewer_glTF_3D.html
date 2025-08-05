@@ -1,66 +1,40 @@
-// ==================== GLOBAL STATE ====================
-let scene, camera, renderer, controls;
-let currentModel = null;
-let isOrthographic = false;
-let modelInfo = {
-    name: '',
-    vertices: 0,
-    faces: 0,
-    fileSize: 0
-};
-
-// Updated translation state
-let currentLanguage = localStorage.getItem('viewerLang') || 'en';
-let translations = {};
-let translationsLoaded = false;
-let viewStates = {
-    front: false,
-    top: false,
-    side: false
-};
-
-// ==================== TRANSLATION LOADER ====================
-async function loadTranslations() {
-    try {
-        const response = await fetch('translations.json');
-        if (!response.ok) throw new Error('Failed to load translations');
-        translations = await response.json();
-        translationsLoaded = true;
-        console.log('Translations loaded successfully');
-        updateLanguage(); // <-- ensure UI updates after loading
-    } catch (error) {
-        console.error('Error loading translations:', error);
-        // Fallback to embedded translations if file not found
-        translations = {
-            en: {/* fallback translations as before */},
-            it: {/* ... */},
-            // ... other languages
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Viewer</title>
+    <script>
+        // Dizionario delle lingue
+        const languageDictionary = {
+            "en": {"greeting": "Welcome to the 3D Viewer!", "exit": "Exit"},
+            "it": {"greeting": "Benvenuto nel Visualizzatore 3D!", "exit": "Esci"}
         };
-        translationsLoaded = true;
-        updateLanguage();
-    }
-}
 
-// ==================== LOCALIZATION ====================
-function updateLanguage() {
-    if (!translationsLoaded) return; // Don't update UI before translations are loaded!
-    const lang = translations[currentLanguage] || translations.en;
-    // ... rest unchanged ...
-}
+        // Funzione per aggiornare la lingua
+        function updateLanguage(selectedLanguage) {
+            const elementsToUpdate = document.querySelectorAll('[data-translate]');
+            elementsToUpdate.forEach(element => {
+                const key = element.getAttribute('data-translate');
+                const newText = languageDictionary[selectedLanguage][key];
+                if (newText && element.innerText !== newText) {
+                    element.innerText = newText;
+                }
+            });
+            localStorage.setItem('selectedLanguage', selectedLanguage);
+        }
 
-// ==================== APPLICATION INITIALIZATION ====================
-async function init() {
-    await loadTranslations();
-    // ... rest unchanged ...
-}
+        // Funzione per inizializzare la lingua all'apertura della pagina
+        function initLanguage() {
+            const savedLanguage = localStorage.getItem('selectedLanguage') || 'en';
+            updateLanguage(savedLanguage);
+        }
 
-// ==================== EVENT LISTENERS ====================
-function setupEventListeners() {
-    // Language selector
-    document.getElementById('languageSelector').addEventListener('change', (e) => {
-        currentLanguage = e.target.value;
-        localStorage.setItem('viewerLang', currentLanguage);
-        updateLanguage();
-    });
-    // ... rest unchanged ...
-}
+        document.addEventListener('DOMContentLoaded', initLanguage);
+    </script>
+</head>
+<body>
+    <h1 data-translate="greeting"></h1>
+    <button data-translate="exit"></button>
+</body>
+</html>
