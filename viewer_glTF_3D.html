@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D GLTF Viewer for CAD</title>
     <style>
-        /* Stili invariati */
         :root {
             --primary-color: #1a73e8;
             --dark-bg: #121212;
@@ -358,7 +357,6 @@
             font-family: monospace;
         }
 
-        /* Responsive design */
         @media (max-width: 768px) {
             .main-content {
                 flex-direction: column;
@@ -511,62 +509,334 @@
                 const response = await fetch('translations.json');
                 if (!response.ok) throw new Error('Failed to load translations');
                 translations = await response.json();
-                console.log('Translations loaded successfully');
             } catch (error) {
-                console.error('Error loading translations:', error);
-                // Fallback to embedded translations if file not found
+                // Fallback: copia completa di translations.json
                 translations = {
-                    en: {
-                        appTitle: "3D GLTF Viewer for CAD",
-                        appSubtitle: "View and manipulate 3D glTF/glb models with professional tools",
-                        loadModelTitle: "Load Model",
-                        fileInputButton: "Select glTF/glb File",
-                        dropAreaText1: "Or drag and drop file here",
-                        dropAreaText2: "Supported formats: .gltf, .glb",
-                        recentFilesTitle: "Recent files (simulation):",
-                        noModelLoaded: "No model loaded",
-                        viewControlsTitle: "View Controls",
-                        orthographicLabel: "Orthographic Projection",
-                        viewFront: "Front",
-                        viewBack: "Back",
-                        viewTop: "Top",
-                        viewBottom: "Bottom",
-                        viewRight: "Right",
-                        viewLeft: "Left",
-                        rotateX: "Rotate X",
-                        rotateY: "Rotate Y",
-                        rotateZ: "Rotate Z",
-                        zoomIn: "Zoom +",
-                        zoomOut: "Zoom -",
-                        resetView: "Reset View",
-                        controlsText: "Controls: Left click to rotate | Right click to pan | Scroll to zoom",
-                        resetShortcut: "Reset View",
-                        frontShortcut: "View Front",
-                        topShortcut: "View Top",
-                        sideShortcut: "View Side",
-                        loadingText: "Loading model...",
-                        nameLabel: "Name",
-                        verticesLabel: "Vertices",
-                        facesLabel: "Faces",
-                        fileSizeLabel: "File Size",
-                        invalidFileMessage: "Please select a .gltf or .glb file",
-                        loadModelError: "Error loading model. Please check that the file is valid.",
-                        parseModelError: "Error parsing model. File may be corrupted.",
-                        fileReadError: "Error reading file"
-                    },
-                    it: {
-                        // Italian translations...
-                    },
-                    // Other languages...
+                  "en": {
+                    "appTitle": "3D GLTF Viewer for CAD",
+                    "appSubtitle": "View and manipulate 3D glTF/glb models with professional tools",
+                    "loadModelTitle": "Load Model",
+                    "fileInputButton": "Select glTF/glb File",
+                    "dropAreaText1": "Or drag and drop file here",
+                    "dropAreaText2": "Supported formats: .gltf, .glb",
+                    "recentFilesTitle": "Recent files (simulation):",
+                    "noModelLoaded": "No model loaded",
+                    "viewControlsTitle": "View Controls",
+                    "orthographicLabel": "Orthographic Projection",
+                    "viewFront": "Front",
+                    "viewBack": "Back",
+                    "viewTop": "Top",
+                    "viewBottom": "Bottom",
+                    "viewRight": "Right",
+                    "viewLeft": "Left",
+                    "rotateX": "Rotate X",
+                    "rotateY": "Rotate Y",
+                    "rotateZ": "Rotate Z",
+                    "zoomIn": "Zoom +",
+                    "zoomOut": "Zoom -",
+                    "resetView": "Reset View",
+                    "controlsText": "Controls: Left click to rotate | Right click to pan | Scroll to zoom",
+                    "resetShortcut": "Reset View",
+                    "frontShortcut": "View Front",
+                    "topShortcut": "View Top",
+                    "sideShortcut": "View Side",
+                    "loadingText": "Loading model...",
+                    "nameLabel": "Name",
+                    "verticesLabel": "Vertices",
+                    "facesLabel": "Faces",
+                    "fileSizeLabel": "File Size",
+                    "invalidFileMessage": "Please select a .gltf or .glb file",
+                    "loadModelError": "Error loading model. Please check that the file is valid.",
+                    "parseModelError": "Error parsing model. File may be corrupted.",
+                    "fileReadError": "Error reading file"
+                  },
+                  "it": {
+                    "appTitle": "Visualizzatore 3D GLTF per CAD",
+                    "appSubtitle": "Visualizza e manipola modelli 3D glTF/glb con strumenti professionali",
+                    "loadModelTitle": "Carica Modello",
+                    "fileInputButton": "Seleziona File glTF/glb",
+                    "dropAreaText1": "Oppure trascina il file qui",
+                    "dropAreaText2": "Formati supportati: .gltf, .glb",
+                    "recentFilesTitle": "File recenti (simulazione):",
+                    "noModelLoaded": "Nessun modello caricato",
+                    "viewControlsTitle": "Controlli Visualizzazione",
+                    "orthographicLabel": "Proiezione Ortografica",
+                    "viewFront": "Frontale",
+                    "viewBack": "Posteriore",
+                    "viewTop": "Dall'alto",
+                    "viewBottom": "Dal basso",
+                    "viewRight": "Destra",
+                    "viewLeft": "Sinistra",
+                    "rotateX": "Ruota X",
+                    "rotateY": "Ruota Y",
+                    "rotateZ": "Ruota Z",
+                    "zoomIn": "Zoom +",
+                    "zoomOut": "Zoom -",
+                    "resetView": "Reset Vista",
+                    "controlsText": "Controlli: Tasto sinistro per ruotare | Tasto destro per panoramica | Scroll per zoom",
+                    "resetShortcut": "Reset Vista",
+                    "frontShortcut": "Vedi Frontale",
+                    "topShortcut": "Vedi Dall'alto",
+                    "sideShortcut": "Vedi Laterale",
+                    "loadingText": "Caricamento modello in corso...",
+                    "nameLabel": "Nome",
+                    "verticesLabel": "Vertici",
+                    "facesLabel": "Facce",
+                    "fileSizeLabel": "Dimensione File",
+                    "invalidFileMessage": "Seleziona un file .gltf o .glb",
+                    "loadModelError": "Errore nel caricamento del modello. Verifica che il file sia valido.",
+                    "parseModelError": "Errore nell'analisi del modello. Il file potrebbe essere danneggiato.",
+                    "fileReadError": "Errore nella lettura del file"
+                  },
+                  "fr": {
+                    "appTitle": "Visualiseur 3D GLTF pour CAD",
+                    "appSubtitle": "Affichez et manipulez des modèles 3D glTF/glb avec des outils professionnels",
+                    "loadModelTitle": "Charger un modèle",
+                    "fileInputButton": "Sélectionner un fichier glTF/glb",
+                    "dropAreaText1": "Ou faites glisser le fichier ici",
+                    "dropAreaText2": "Formats supportés : .gltf, .glb",
+                    "recentFilesTitle": "Fichiers récents (simulation) :",
+                    "noModelLoaded": "Aucun modèle chargé",
+                    "viewControlsTitle": "Contrôles d'affichage",
+                    "orthographicLabel": "Projection orthographique",
+                    "viewFront": "Avant",
+                    "viewBack": "Arrière",
+                    "viewTop": "Dessus",
+                    "viewBottom": "Dessous",
+                    "viewRight": "Droite",
+                    "viewLeft": "Gauche",
+                    "rotateX": "Rotation X",
+                    "rotateY": "Rotation Y",
+                    "rotateZ": "Rotation Z",
+                    "zoomIn": "Zoom +",
+                    "zoomOut": "Zoom -",
+                    "resetView": "Réinitialiser la vue",
+                    "controlsText": "Contrôles : Clic gauche pour faire pivoter | Clic droit pour déplacer | Molette pour zoomer",
+                    "resetShortcut": "Réinitialiser la vue",
+                    "frontShortcut": "Vue avant",
+                    "topShortcut": "Vue dessus",
+                    "sideShortcut": "Vue côté",
+                    "loadingText": "Chargement du modèle...",
+                    "nameLabel": "Nom",
+                    "verticesLabel": "Sommets",
+                    "facesLabel": "Faces",
+                    "fileSizeLabel": "Taille du fichier",
+                    "invalidFileMessage": "Veuillez sélectionner un fichier .gltf ou .glb",
+                    "loadModelError": "Erreur lors du chargement du modèle. Veuillez vérifier que le fichier est valide.",
+                    "parseModelError": "Erreur lors de l'analyse du modèle. Le fichier peut être corrompu.",
+                    "fileReadError": "Erreur de lecture du fichier"
+                  },
+                  "de": {
+                    "appTitle": "3D GLTF-Betrachter für CAD",
+                    "appSubtitle": "Anzeigen und Manipulieren von 3D glTF/glb-Modellen mit professionellen Werkzeugen",
+                    "loadModelTitle": "Modell laden",
+                    "fileInputButton": "glTF/glb-Datei auswählen",
+                    "dropAreaText1": "Oder Datei hierher ziehen",
+                    "dropAreaText2": "Unterstützte Formate: .gltf, .glb",
+                    "recentFilesTitle": "Letzte Dateien (Simulation):",
+                    "noModelLoaded": "Kein Modell geladen",
+                    "viewControlsTitle": "Ansichtssteuerung",
+                    "orthographicLabel": "Orthografische Projektion",
+                    "viewFront": "Vorne",
+                    "viewBack": "Hinten",
+                    "viewTop": "Oben",
+                    "viewBottom": "Unten",
+                    "viewRight": "Rechts",
+                    "viewLeft": "Links",
+                    "rotateX": "Drehen X",
+                    "rotateY": "Drehen Y",
+                    "rotateZ": "Drehen Z",
+                    "zoomIn": "Zoom +",
+                    "zoomOut": "Zoom -",
+                    "resetView": "Ansicht zurücksetzen",
+                    "controlsText": "Steuerung: Linke Maustaste zum Drehen | Rechte Maustaste zum Verschieben | Scrollen zum Zoomen",
+                    "resetShortcut": "Ansicht zurücksetzen",
+                    "frontShortcut": "Vorne anzeigen",
+                    "topShortcut": "Oben anzeigen",
+                    "sideShortcut": "Seite anzeigen",
+                    "loadingText": "Modell wird geladen...",
+                    "nameLabel": "Name",
+                    "verticesLabel": "Vertices",
+                    "facesLabel": "Faces",
+                    "fileSizeLabel": "Dateigröße",
+                    "invalidFileMessage": "Bitte wählen Sie eine .gltf- oder .glb-Datei aus",
+                    "loadModelError": "Fehler beim Laden des Modells. Bitte überprüfen Sie, ob die Datei gültig ist.",
+                    "parseModelError": "Fehler beim Parsen des Modells. Die Datei ist möglicherweise beschädigt.",
+                    "fileReadError": "Fehler beim Lesen der Datei"
+                  },
+                  "es": {
+                    "appTitle": "Visor 3D GLTF para CAD",
+                    "appSubtitle": "Visualiza y manipula modelos 3D glTF/glb con herramientas profesionales",
+                    "loadModelTitle": "Cargar Modelo",
+                    "fileInputButton": "Seleccionar archivo glTF/glb",
+                    "dropAreaText1": "O arrastra y suelta el archivo aquí",
+                    "dropAreaText2": "Formatos soportados: .gltf, .glb",
+                    "recentFilesTitle": "Archivos recientes (simulación):",
+                    "noModelLoaded": "Ningún modelo cargado",
+                    "viewControlsTitle": "Controles de Vista",
+                    "orthographicLabel": "Proyección Ortográfica",
+                    "viewFront": "Frente",
+                    "viewBack": "Atrás",
+                    "viewTop": "Superior",
+                    "viewBottom": "Inferior",
+                    "viewRight": "Derecha",
+                    "viewLeft": "Izquierda",
+                    "rotateX": "Rotar X",
+                    "rotateY": "Rotar Y",
+                    "rotateZ": "Rotar Z",
+                    "zoomIn": "Zoom +",
+                    "zoomOut": "Zoom -",
+                    "resetView": "Restablecer Vista",
+                    "controlsText": "Controles: Clic izquierdo para rotar | Clic derecho para desplazar | Rueda para zoom",
+                    "resetShortcut": "Restablecer Vista",
+                    "frontShortcut": "Ver Frente",
+                    "topShortcut": "Ver Superior",
+                    "sideShortcut": "Ver Lateral",
+                    "loadingText": "Cargando modelo...",
+                    "nameLabel": "Nombre",
+                    "verticesLabel": "Vértices",
+                    "facesLabel": "Caras",
+                    "fileSizeLabel": "Tamaño de archivo",
+                    "invalidFileMessage": "Por favor seleccione un archivo .gltf o .glb",
+                    "loadModelError": "Error al cargar el modelo. Por favor verifique que el archivo sea válido.",
+                    "parseModelError": "Error al analizar el modelo. El archivo puede estar dañado.",
+                    "fileReadError": "Error al leer el archivo"
+                  },
+                  "pt": {
+                    "appTitle": "Visualizador 3D GLTF para CAD",
+                    "appSubtitle": "Visualize e manipule modelos 3D glTF/glb com ferramentas profissionais",
+                    "loadModelTitle": "Carregar Modelo",
+                    "fileInputButton": "Selecionar arquivo glTF/glb",
+                    "dropAreaText1": "Ou arraste e solte o arquivo aqui",
+                    "dropAreaText2": "Formatos suportados: .gltf, .glb",
+                    "recentFilesTitle": "Arquivos recentes (simulação):",
+                    "noModelLoaded": "Nenhum modelo carregado",
+                    "viewControlsTitle": "Controles de Visualização",
+                    "orthographicLabel": "Projeção Ortográfica",
+                    "viewFront": "Frente",
+                    "viewBack": "Trás",
+                    "viewTop": "Topo",
+                    "viewBottom": "Fundo",
+                    "viewRight": "Direita",
+                    "viewLeft": "Esquerda",
+                    "rotateX": "Rotacionar X",
+                    "rotateY": "Rotacionar Y",
+                    "rotateZ": "Rotacionar Z",
+                    "zoomIn": "Zoom +",
+                    "zoomOut": "Zoom -",
+                    "resetView": "Redefinir Visualização",
+                    "controlsText": "Controles: Clique esquerdo para rotacionar | Clique direito para mover | Rolar para zoom",
+                    "resetShortcut": "Redefinir Visualização",
+                    "frontShortcut": "Ver Frente",
+                    "topShortcut": "Ver Topo",
+                    "sideShortcut": "Ver Lateral",
+                    "loadingText": "Carregando modelo...",
+                    "nameLabel": "Nome",
+                    "verticesLabel": "Vértices",
+                    "facesLabel": "Faces",
+                    "fileSizeLabel": "Tamanho do arquivo",
+                    "invalidFileMessage": "Por favor selecione um arquivo .gltf ou .glb",
+                    "loadModelError": "Erro ao carregar o modelo. Por favor verifique se o arquivo é válido.",
+                    "parseModelError": "Erro ao analisar o modelo. O arquivo pode estar corrompido.",
+                    "fileReadError": "Erro ao ler o arquivo"
+                  },
+                  "ja": {
+                    "appTitle": "3D GLTF CADビューア",
+                    "appSubtitle": "プロフェッショナルツールで3D glTF/glbモデルを表示および操作",
+                    "loadModelTitle": "モデルを読み込む",
+                    "fileInputButton": "glTF/glbファイルを選択",
+                    "dropAreaText1": "またはファイルをここにドラッグ＆ドロップ",
+                    "dropAreaText2": "サポート形式: .gltf, .glb",
+                    "recentFilesTitle": "最近のファイル（シミュレーション）:",
+                    "noModelLoaded": "モデルが読み込まれていません",
+                    "viewControlsTitle": "表示コントロール",
+                    "orthographicLabel": "正投影",
+                    "viewFront": "正面",
+                    "viewBack": "背面",
+                    "viewTop": "上面",
+                    "viewBottom": "底面",
+                    "viewRight": "右側面",
+                    "viewLeft": "左側面",
+                    "rotateX": "X軸回転",
+                    "rotateY": "Y軸回転",
+                    "rotateZ": "Z軸回転",
+                    "zoomIn": "ズームイン",
+                    "zoomOut": "ズームアウト",
+                    "resetView": "ビューをリセット",
+                    "controlsText": "操作: 左クリックで回転 | 右クリックで移動 | スクロールでズーム",
+                    "resetShortcut": "ビューをリセット",
+                    "frontShortcut": "正面表示",
+                    "topShortcut": "上面表示",
+                    "sideShortcut": "側面表示",
+                    "loadingText": "モデルを読み込んでいます...",
+                    "nameLabel": "名前",
+                    "verticesLabel": "頂点",
+                    "facesLabel": "面",
+                    "fileSizeLabel": "ファイルサイズ",
+                    "invalidFileMessage": ".gltfまたは.glbファイルを選択してください",
+                    "loadModelError": "モデルの読み込みエラー。ファイルが有効か確認してください。",
+                    "parseModelError": "モデルの解析エラー。ファイルが破損している可能性があります。",
+                    "fileReadError": "ファイルの読み取りエラー"
+                  },
+                  "zh": {
+                    "appTitle": "3D GLTF CAD查看器",
+                    "appSubtitle": "使用专业工具查看和操作3D glTF/glb模型",
+                    "loadModelTitle": "加载模型",
+                    "fileInputButton": "选择glTF/glb文件",
+                    "dropAreaText1": "或将文件拖放到此处",
+                    "dropAreaText2": "支持格式: .gltf, .glb",
+                    "recentFilesTitle": "最近文件(模拟):",
+                    "noModelLoaded": "未加载模型",
+                    "viewControlsTitle": "视图控制",
+                    "orthographicLabel": "正交投影",
+                    "viewFront": "前视图",
+                    "viewBack": "后视图",
+                    "viewTop": "顶视图",
+                    "viewBottom": "底视图",
+                    "viewRight": "右视图",
+                    "viewLeft": "左视图",
+                    "rotateX": "绕X轴旋转",
+                    "rotateY": "绕Y轴旋转",
+                    "rotateZ": "绕Z轴旋转",
+                    "zoomIn": "放大",
+                    "zoomOut": "缩小",
+                    "resetView": "重置视图",
+                    "controlsText": "控制: 左键旋转 | 右键平移 | 滚轮缩放",
+                    "resetShortcut": "重置视图",
+                    "frontShortcut": "前视图",
+                    "topShortcut": "顶视图",
+                    "sideShortcut": "侧视图",
+                    "loadingText": "正在加载模型...",
+                    "nameLabel": "名称",
+                    "verticesLabel": "顶点数",
+                    "facesLabel": "面数",
+                    "fileSizeLabel": "文件大小",
+                    "invalidFileMessage": "请选择.gltf或.glb文件",
+                    "loadModelError": "加载模型错误。请检查文件是否有效。",
+                    "parseModelError": "解析模型错误。文件可能已损坏。",
+                    "fileReadError": "文件读取错误"
+                  }
                 };
             }
+            // Lingua preferita
+            const savedLang = localStorage.getItem('preferredLanguage');
+            if (savedLang && translations[savedLang]) {
+                currentLanguage = savedLang;
+            } else {
+                const browserLang = navigator.language.split('-')[0];
+                if (translations[browserLang]) {
+                    currentLanguage = browserLang;
+                }
+            }
+            document.getElementById('languageSelector').value = currentLanguage;
         }
 
         // ==================== LOCALIZATION ====================
         function updateLanguage() {
             const lang = translations[currentLanguage] || translations.en;
             
-            // Update all translatable elements
+            localStorage.setItem('preferredLanguage', currentLanguage);
+            
             document.getElementById('appTitle').textContent = lang.appTitle;
             document.getElementById('appSubtitle').textContent = lang.appSubtitle;
             document.getElementById('loadModelTitle').textContent = lang.loadModelTitle;
@@ -590,10 +860,7 @@
             document.getElementById('sideShortcut').textContent = lang.sideShortcut;
             document.getElementById('loadingText').textContent = lang.loadingText;
             
-            // Update view buttons based on current state
             updateViewButtonLabels();
-            
-            // Update model info if a model is loaded
             if (modelInfo.name) {
                 updateModelInfo();
             }
@@ -614,31 +881,30 @@
 
         // ==================== APPLICATION INITIALIZATION ====================
         async function init() {
-            // Load translations first
             await loadTranslations();
-            
             // Create scene
             scene = new THREE.Scene();
             scene.background = new THREE.Color(0x1a1a1a);
             scene.fog = new THREE.Fog(0x1a1a1a, 20, 100);
 
-            // Create camera
+            // Il canvas potrebbe non essere dimensionato, usare il parent
             const canvas = document.getElementById('modelCanvas');
-            const aspect = canvas.clientWidth / canvas.clientHeight;
+            const container = canvas.parentElement;
+            const width = container.clientWidth || window.innerWidth;
+            const height = container.clientHeight || window.innerHeight;
+            const aspect = width / height;
             camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 1000);
             camera.position.set(0, 0, 5);
 
-            // Create renderer
             renderer = new THREE.WebGLRenderer({ 
                 canvas: canvas,
                 antialias: true,
                 powerPreference: "high-performance"
             });
-            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+            renderer.setSize(width, height);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             renderer.shadowMap.enabled = true;
 
-            // Add lights
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
             scene.add(ambientLight);
 
@@ -651,7 +917,6 @@
             backLight.position.set(-5, -5, -5);
             scene.add(backLight);
 
-            // Add orbit controls
             controls = new THREE.OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
             controls.dampingFactor = 0.05;
@@ -659,39 +924,35 @@
             controls.minDistance = 1;
             controls.maxDistance = 50;
 
-            // Add grid helper
             const gridHelper = new THREE.GridHelper(10, 10, 0x444444, 0x222222);
             scene.add(gridHelper);
 
-            // Add axes helper
             const axesHelper = new THREE.AxesHelper(5);
             scene.add(axesHelper);
 
-            // Handle window resize
             window.addEventListener('resize', onWindowResize);
 
-            // Setup UI event listeners
             setupEventListeners();
 
-            // Set initial language
             updateLanguage();
 
-            // Start animation loop
             animate();
         }
 
         // ==================== EVENT LISTENERS ====================
         function setupEventListeners() {
-            // Language selector
             document.getElementById('languageSelector').addEventListener('change', (e) => {
                 currentLanguage = e.target.value;
                 updateLanguage();
             });
 
-            // File input
             document.getElementById('fileInput').addEventListener('change', handleFileSelect);
-            
-            // Drag and drop
+
+            // Bottone file picker
+            document.getElementById('fileInputButton').addEventListener('click', () => {
+                document.getElementById('fileInput').click();
+            });
+
             const dropArea = document.getElementById('dropArea');
             dropArea.addEventListener('dragover', (e) => {
                 e.preventDefault();
@@ -705,16 +966,13 @@
             dropArea.addEventListener('drop', (e) => {
                 e.preventDefault();
                 dropArea.classList.remove('dragover');
-                
                 if (e.dataTransfer.files.length) {
                     handleFile(e.dataTransfer.files[0]);
                 }
             });
 
-            // Projection toggle
             document.getElementById('projectionToggle').addEventListener('change', toggleProjection);
 
-            // View controls with toggle functionality
             document.getElementById('viewFront').addEventListener('click', () => {
                 viewStates.front = !viewStates.front;
                 setView('front');
@@ -733,17 +991,14 @@
                 updateViewButtonLabels();
             });
 
-            // Rotation controls
             document.getElementById('rotateX').addEventListener('click', () => rotateModel('x'));
             document.getElementById('rotateY').addEventListener('click', () => rotateModel('y'));
             document.getElementById('rotateZ').addEventListener('click', () => rotateModel('z'));
 
-            // Zoom controls
             document.getElementById('zoomIn').addEventListener('click', () => zoomCamera(0.8));
             document.getElementById('zoomOut').addEventListener('click', () => zoomCamera(1.2));
             document.getElementById('resetView').addEventListener('click', resetCamera);
 
-            // Keyboard shortcuts
             document.addEventListener('keydown', (e) => {
                 switch(e.key.toLowerCase()) {
                     case 'r': resetCamera(); break;
@@ -786,7 +1041,13 @@
             
             reader.onload = function(event) {
                 try {
-                    loadModel(event.target.result, file.name, file.size);
+                    // Distinguere .gltf (JSON) e .glb (binario)
+                    if (file.name.match(/\.gltf$/i)) {
+                        const text = new TextDecoder().decode(event.target.result);
+                        loadModel(text, file.name, file.size, true);
+                    } else {
+                        loadModel(event.target.result, file.name, file.size, false);
+                    }
                 } catch (error) {
                     console.error('Error loading model:', error);
                     alert(lang.loadModelError || 'Error loading model. Please check that the file is valid.');
@@ -803,16 +1064,14 @@
         }
 
         // ==================== MODEL LOADING ====================
-        function loadModel(arrayBuffer, fileName, fileSize) {
-            // Clear previous model
+        function loadModel(data, fileName, fileSize, isText = false) {
             if (currentModel) {
                 scene.remove(currentModel);
                 currentModel = null;
             }
 
             const loader = new THREE.GLTFLoader();
-            
-            loader.parse(arrayBuffer, '', (gltf) => {
+            loader.parse(data, '', (gltf) => {
                 currentModel = gltf.scene;
                 
                 // Center model
@@ -820,18 +1079,15 @@
                 const center = box.getCenter(new THREE.Vector3());
                 const size = box.getSize(new THREE.Vector3()).length();
                 
-                // Center model at origin
                 currentModel.position.x -= center.x;
                 currentModel.position.y -= center.y;
                 currentModel.position.z -= center.z;
                 
-                // Adjust camera position based on model size
                 camera.position.z = size * 1.5;
                 controls.target.set(0, 0, 0);
                 
                 scene.add(currentModel);
                 
-                // Calculate model info
                 modelInfo = {
                     name: fileName,
                     vertices: countVertices(currentModel),
@@ -841,6 +1097,7 @@
                 
                 updateModelInfo();
                 showLoading(false);
+                controls.reset();
             }, undefined, (error) => {
                 console.error('Error parsing GLTF:', error);
                 const lang = translations[currentLanguage] || translations.en;
@@ -853,7 +1110,7 @@
         function countVertices(object) {
             let count = 0;
             object.traverse((child) => {
-                if (child.isMesh) {
+                if (child.isMesh && child.geometry && child.geometry.attributes && child.geometry.attributes.position) {
                     count += child.geometry.attributes.position.count;
                 }
             });
@@ -863,7 +1120,7 @@
         function countFaces(object) {
             let count = 0;
             object.traverse((child) => {
-                if (child.isMesh) {
+                if (child.isMesh && child.geometry && child.geometry.attributes && child.geometry.attributes.position) {
                     const index = child.geometry.index;
                     count += index ? index.count / 3 : child.geometry.attributes.position.count / 3;
                 }
@@ -897,7 +1154,6 @@
             const container = canvas.parentElement;
             const aspect = container.clientWidth / container.clientHeight;
             
-            // Create new camera
             let newCamera;
             
             if (isOrthographic) {
@@ -914,17 +1170,11 @@
                 newCamera = new THREE.PerspectiveCamera(45, aspect, 0.1, 1000);
             }
             
-            // Copy position and rotation
             newCamera.position.copy(camera.position);
             newCamera.rotation.copy(camera.rotation);
             newCamera.zoom = camera.zoom;
             
-            // Update scene and controls
-            scene.remove(camera);
             camera = newCamera;
-            scene.add(camera);
-            
-            // Update controls
             controls.dispose();
             controls = new THREE.OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
@@ -974,7 +1224,7 @@
         function rotateModel(axis) {
             if (!currentModel) return;
             
-            const rotationAmount = Math.PI / 4; // 45 degrees
+            const rotationAmount = Math.PI / 4;
             switch(axis) {
                 case 'x':
                     currentModel.rotation.x += rotationAmount;
@@ -989,12 +1239,15 @@
         }
 
         function zoomCamera(factor) {
-            const targetDistance = controls.getDistance();
-            controls.setDistance(targetDistance * factor);
+            if (camera.isPerspectiveCamera) {
+                camera.position.multiplyScalar(factor);
+            } else if (camera.isOrthographicCamera) {
+                camera.zoom *= (1/factor);
+                camera.updateProjectionMatrix();
+            }
         }
 
         function resetCamera() {
-            // Reset view states
             viewStates = {
                 front: false,
                 top: false,
@@ -1022,7 +1275,6 @@
             const width = container.clientWidth;
             const height = container.clientHeight;
             
-            // Update camera
             camera.aspect = width / height;
             
             if (isOrthographic) {
@@ -1048,8 +1300,6 @@
             renderer.render(scene, camera);
         }
 
-        // ==================== INITIALIZATION ====================
-        // Initialize the application when the page loads
         window.addEventListener('load', init);
     </script>
 </body>
