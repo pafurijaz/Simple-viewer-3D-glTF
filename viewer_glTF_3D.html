@@ -6,14 +6,38 @@
     <title>3D GLTF Viewer for CAD</title>
     <style>
         :root {
-            --primary-color: #1a73e8;
-            --dark-bg: #121212;
-            --darker-bg: #0a0a0a;
-            --panel-bg: #1e1e1e;
-            --text-color: #e0e0e0;
-            --border-color: #333;
-            --hover-color: #2a2a2a;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            /* Dark Theme Colors */
+            --primary-color-dark: #1a73e8;
+            --dark-bg-dark: #121212;
+            --darker-bg-dark: #0a0a0a;
+            --panel-bg-dark: #1e1e1e;
+            --text-color-dark: #e0e0e0;
+            --border-color-dark: #333;
+            --hover-color-dark: #2a2a2a;
+            --shadow-dark: 0 4px 12px rgba(0, 0, 0, 0.5);
+            --viewer-bg-dark: #1a1a1a;
+
+            /* Light Theme Colors */
+            --primary-color-light: #1a73e8;
+            --dark-bg-light: #f0f0f0;
+            --darker-bg-light: #e0e0e0;
+            --panel-bg-light: #ffffff;
+            --text-color-light: #333333;
+            --border-color-light: #cccccc;
+            --hover-color-light: #f5f5f5;
+            --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --viewer-bg-light: #f8f8f8;
+
+            /* Current Theme Variables (Default to Dark) */
+            --primary-color: var(--primary-color-dark);
+            --dark-bg: var(--dark-bg-dark);
+            --darker-bg: var(--darker-bg-dark);
+            --panel-bg: var(--panel-bg-dark);
+            --text-color: var(--text-color-dark);
+            --border-color: var(--border-color-dark);
+            --hover-color: var(--hover-color-dark);
+            --shadow: var(--shadow-dark);
+            --viewer-bg: var(--viewer-bg-dark);
         }
 
         * {
@@ -30,6 +54,18 @@
             overflow: hidden;
         }
 
+        body.light-theme {
+            --primary-color: var(--primary-color-light);
+            --dark-bg: var(--dark-bg-light);
+            --darker-bg: var(--darker-bg-light);
+            --panel-bg: var(--panel-bg-light);
+            --text-color: var(--text-color-light);
+            --border-color: var(--border-color-light);
+            --hover-color: var(--hover-color-light);
+            --shadow: var(--shadow-light);
+            --viewer-bg: var(--viewer-bg-light);
+        }
+
         .app-container {
             display: flex;
             flex-direction: column;
@@ -44,12 +80,14 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         h1 {
             font-size: 1.8rem;
             margin-bottom: 5px;
-            color: #fff;
+            color: #fff; /* Keep title white for contrast */
         }
 
         .subtitle {
@@ -57,7 +95,14 @@
             opacity: 0.8;
         }
 
-        .language-selector {
+        .header-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .language-selector, .theme-selector {
             background-color: var(--panel-bg);
             color: var(--text-color);
             border: 1px solid var(--border-color);
@@ -75,6 +120,7 @@
             flex: 1;
             position: relative;
             min-height: 0;
+            background-color: var(--viewer-bg); /* Use theme background */
         }
 
         #modelCanvas {
@@ -146,10 +192,6 @@
             gap: 10px;
         }
 
-        .panel-title i {
-            font-size: 1.4rem;
-        }
-
         .btn-group {
             display: flex;
             flex-wrap: wrap;
@@ -158,7 +200,7 @@
         }
 
         .btn {
-            background-color: #2a2a2a;
+            background-color: var(--hover-color);
             color: var(--text-color);
             border: 1px solid var(--border-color);
             padding: 10px 15px;
@@ -173,6 +215,7 @@
         .btn:hover {
             background-color: var(--hover-color);
             transform: translateY(-2px);
+            filter: brightness(1.1); /* Adjust for both themes */
         }
 
         .btn:active {
@@ -182,10 +225,12 @@
         .btn-primary {
             background-color: var(--primary-color);
             border-color: var(--primary-color);
+            color: white;
         }
 
         .btn-primary:hover {
-            background-color: #0d62c9;
+            background-color: var(--primary-color);
+            filter: brightness(0.9);
         }
 
         .toggle-switch {
@@ -270,7 +315,7 @@
         }
 
         .file-input-button:hover {
-            background-color: #0d62c9;
+            filter: brightness(0.9);
         }
 
         .drop-area {
@@ -319,7 +364,7 @@
         .model-info {
             margin-top: 15px;
             padding: 10px;
-            background-color: rgba(0, 0, 0, 0.2);
+            background-color: rgba(0, 0, 0, 0.1); /* Adjust for theme */
             border-radius: 4px;
             font-size: 0.9rem;
         }
@@ -334,6 +379,11 @@
             font-size: 0.85rem;
             text-align: center;
             box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
         }
 
         .shortcuts {
@@ -351,12 +401,57 @@
         }
 
         .key {
-            background-color: #333;
+            background-color: var(--hover-color);
             padding: 2px 8px;
             border-radius: 4px;
             font-family: monospace;
         }
 
+        /* Fullscreen styles */
+        .fullscreen .main-content {
+            flex-direction: column;
+        }
+
+        .fullscreen .control-panel {
+            display: none; /* Hide controls in fullscreen */
+        }
+
+        .fullscreen .viewer-container {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .fullscreen-toggle {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .color-picker-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .color-picker-label {
+            white-space: nowrap;
+        }
+
+        .color-picker {
+            width: 40px;
+            height: 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        /* Responsive design */
         @media (max-width: 768px) {
             .main-content {
                 flex-direction: column;
@@ -378,11 +473,26 @@
             .btn {
                 min-width: auto;
             }
-            
+
             header {
                 flex-direction: column;
                 gap: 10px;
                 text-align: center;
+            }
+
+            .header-controls {
+                width: 100%;
+                justify-content: center;
+            }
+
+            /* Override fullscreen for mobile if needed */
+            .fullscreen .main-content {
+                flex-direction: column;
+            }
+
+            .fullscreen .viewer-container {
+                width: 100vw;
+                height: 100vh;
             }
         }
     </style>
@@ -394,16 +504,22 @@
                 <h1 id="appTitle">3D GLTF Viewer for CAD</h1>
                 <div class="subtitle" id="appSubtitle">View and manipulate 3D glTF/glb models with professional tools</div>
             </div>
-            <select class="language-selector" id="languageSelector">
-                <option value="en">English</option>
-                <option value="it">Italiano</option>
-                <option value="fr">Français</option>
-                <option value="de">Deutsch</option>
-                <option value="es">Español</option>
-                <option value="pt">Português</option>
-                <option value="ja">日本語</option>
-                <option value="zh">中文</option>
-            </select>
+            <div class="header-controls">
+                <select class="theme-selector" id="themeSelector">
+                    <option value="dark">Dark Theme</option>
+                    <option value="light">Light Theme</option>
+                </select>
+                <select class="language-selector" id="languageSelector">
+                    <option value="en">English</option>
+                    <option value="it">Italiano</option>
+                    <option value="fr">Français</option>
+                    <option value="de">Deutsch</option>
+                    <option value="es">Español</option>
+                    <option value="pt">Português</option>
+                    <option value="ja">日本語</option>
+                    <option value="zh">中文</option>
+                </select>
+            </div>
         </header>
 
         <div class="main-content">
@@ -463,11 +579,16 @@
                         <button class="btn" id="zoomOut">Zoom -</button>
                         <button class="btn" id="resetView">Reset View</button>
                     </div>
+                    <div class="color-picker-container">
+                        <span class="color-picker-label" id="bgColorLabel">Background Color:</span>
+                        <input type="color" class="color-picker" id="bgColorPicker" value="#1a1a1a">
+                    </div>
                 </div>
             </div>
         </div>
 
         <footer>
+            <button class="fullscreen-toggle" id="fullscreenToggle">Toggle Fullscreen</button>
             <p id="controlsText">Controls: Left click to rotate | Right click to pan | Scroll to zoom</p>
             <div class="shortcuts">
                 <div class="shortcut-item"><span class="key">R</span> <span id="resetShortcut">Reset View</span></div>
@@ -494,7 +615,6 @@
             faces: 0,
             fileSize: 0
         };
-        
         let currentLanguage = 'en';
         let translations = {};
         let viewStates = {
@@ -502,6 +622,7 @@
             top: false,
             side: false
         };
+        let isFullscreen = false; // Stato per la modalità fullscreen
 
         // ==================== TRANSLATION LOADER ====================
         async function loadTranslations() {
@@ -548,7 +669,10 @@
                     "invalidFileMessage": "Please select a .gltf or .glb file",
                     "loadModelError": "Error loading model. Please check that the file is valid.",
                     "parseModelError": "Error parsing model. File may be corrupted.",
-                    "fileReadError": "Error reading file"
+                    "fileReadError": "Error reading file",
+                    "bgColorLabel": "Background Color:",
+                    "fullscreenToggle": "Toggle Fullscreen",
+                    "exitFullscreen": "Exit Fullscreen"
                   },
                   "it": {
                     "appTitle": "Visualizzatore 3D GLTF per CAD",
@@ -586,7 +710,10 @@
                     "invalidFileMessage": "Seleziona un file .gltf o .glb",
                     "loadModelError": "Errore nel caricamento del modello. Verifica che il file sia valido.",
                     "parseModelError": "Errore nell'analisi del modello. Il file potrebbe essere danneggiato.",
-                    "fileReadError": "Errore nella lettura del file"
+                    "fileReadError": "Errore nella lettura del file",
+                    "bgColorLabel": "Colore Sfondo:",
+                    "fullscreenToggle": "Schermo Intero",
+                    "exitFullscreen": "Esci da Schermo Intero"
                   },
                   "fr": {
                     "appTitle": "Visualiseur 3D GLTF pour CAD",
@@ -624,7 +751,10 @@
                     "invalidFileMessage": "Veuillez sélectionner un fichier .gltf ou .glb",
                     "loadModelError": "Erreur lors du chargement du modèle. Veuillez vérifier que le fichier est valide.",
                     "parseModelError": "Erreur lors de l'analyse du modèle. Le fichier peut être corrompu.",
-                    "fileReadError": "Erreur de lecture du fichier"
+                    "fileReadError": "Erreur de lecture du fichier",
+                    "bgColorLabel": "Couleur d'Arrière-plan:",
+                    "fullscreenToggle": "Plein Écran",
+                    "exitFullscreen": "Quitter le Plein Écran"
                   },
                   "de": {
                     "appTitle": "3D GLTF-Betrachter für CAD",
@@ -662,7 +792,10 @@
                     "invalidFileMessage": "Bitte wählen Sie eine .gltf- oder .glb-Datei aus",
                     "loadModelError": "Fehler beim Laden des Modells. Bitte überprüfen Sie, ob die Datei gültig ist.",
                     "parseModelError": "Fehler beim Parsen des Modells. Die Datei ist möglicherweise beschädigt.",
-                    "fileReadError": "Fehler beim Lesen der Datei"
+                    "fileReadError": "Fehler beim Lesen der Datei",
+                    "bgColorLabel": "Hintergrundfarbe:",
+                    "fullscreenToggle": "Vollbildschirm",
+                    "exitFullscreen": "Vollbildschirm verlassen"
                   },
                   "es": {
                     "appTitle": "Visor 3D GLTF para CAD",
@@ -700,7 +833,10 @@
                     "invalidFileMessage": "Por favor seleccione un archivo .gltf o .glb",
                     "loadModelError": "Error al cargar el modelo. Por favor verifique que el archivo sea válido.",
                     "parseModelError": "Error al analizar el modelo. El archivo puede estar dañado.",
-                    "fileReadError": "Error al leer el archivo"
+                    "fileReadError": "Error al leer el archivo",
+                    "bgColorLabel": "Color de Fondo:",
+                    "fullscreenToggle": "Pantalla Completa",
+                    "exitFullscreen": "Salir de Pantalla Completa"
                   },
                   "pt": {
                     "appTitle": "Visualizador 3D GLTF para CAD",
@@ -738,7 +874,10 @@
                     "invalidFileMessage": "Por favor selecione um arquivo .gltf ou .glb",
                     "loadModelError": "Erro ao carregar o modelo. Por favor verifique se o arquivo é válido.",
                     "parseModelError": "Erro ao analisar o modelo. O arquivo pode estar corrompido.",
-                    "fileReadError": "Erro ao ler o arquivo"
+                    "fileReadError": "Erro ao ler o arquivo",
+                    "bgColorLabel": "Cor de Fundo:",
+                    "fullscreenToggle": "Tela Cheia",
+                    "exitFullscreen": "Sair da Tela Cheia"
                   },
                   "ja": {
                     "appTitle": "3D GLTF CADビューア",
@@ -776,7 +915,10 @@
                     "invalidFileMessage": ".gltfまたは.glbファイルを選択してください",
                     "loadModelError": "モデルの読み込みエラー。ファイルが有効か確認してください。",
                     "parseModelError": "モデルの解析エラー。ファイルが破損している可能性があります。",
-                    "fileReadError": "ファイルの読み取りエラー"
+                    "fileReadError": "ファイルの読み取りエラー",
+                    "bgColorLabel": "背景色:",
+                    "fullscreenToggle": "全画面表示",
+                    "exitFullscreen": "全画面表示を終了"
                   },
                   "zh": {
                     "appTitle": "3D GLTF CAD查看器",
@@ -814,7 +956,10 @@
                     "invalidFileMessage": "请选择.gltf或.glb文件",
                     "loadModelError": "加载模型错误。请检查文件是否有效。",
                     "parseModelError": "解析模型错误。文件可能已损坏。",
-                    "fileReadError": "文件读取错误"
+                    "fileReadError": "文件读取错误",
+                    "bgColorLabel": "背景颜色:",
+                    "fullscreenToggle": "全屏",
+                    "exitFullscreen": "退出全屏"
                   }
                 };
             }
@@ -834,9 +979,7 @@
         // ==================== LOCALIZATION ====================
         function updateLanguage() {
             const lang = translations[currentLanguage] || translations.en;
-            
             localStorage.setItem('preferredLanguage', currentLanguage);
-            
             document.getElementById('appTitle').textContent = lang.appTitle;
             document.getElementById('appSubtitle').textContent = lang.appSubtitle;
             document.getElementById('loadModelTitle').textContent = lang.loadModelTitle;
@@ -859,7 +1002,8 @@
             document.getElementById('topShortcut').textContent = lang.topShortcut;
             document.getElementById('sideShortcut').textContent = lang.sideShortcut;
             document.getElementById('loadingText').textContent = lang.loadingText;
-            
+            document.getElementById('bgColorLabel').textContent = lang.bgColorLabel;
+            updateFullscreenButtonText(); // Aggiorna il testo del bottone fullscreen
             updateViewButtonLabels();
             if (modelInfo.name) {
                 updateModelInfo();
@@ -868,24 +1012,63 @@
 
         function updateViewButtonLabels() {
             const lang = translations[currentLanguage] || translations.en;
-            
-            document.getElementById('viewFront').textContent = 
+            document.getElementById('viewFront').textContent =
                 viewStates.front ? lang.viewBack : lang.viewFront;
-                
-            document.getElementById('viewTop').textContent = 
+            document.getElementById('viewTop').textContent =
                 viewStates.top ? lang.viewBottom : lang.viewTop;
-                
-            document.getElementById('viewSide').textContent = 
+            document.getElementById('viewSide').textContent =
                 viewStates.side ? lang.viewLeft : lang.viewRight;
+        }
+
+        // Aggiorna il testo del bottone fullscreen in base allo stato e alla lingua
+        function updateFullscreenButtonText() {
+            const lang = translations[currentLanguage] || translations.en;
+            const button = document.getElementById('fullscreenToggle');
+            button.textContent = isFullscreen ? lang.exitFullscreen : lang.fullscreenToggle;
+        }
+
+        // ==================== THEME MANAGEMENT ====================
+        function setTheme(theme) {
+            document.body.classList.toggle('light-theme', theme === 'light');
+            // Update canvas background color to match theme
+            if (scene) {
+                const bgColor = theme === 'light' ? 0xf8f8f8 : 0x1a1a1a;
+                scene.background = new THREE.Color(bgColor);
+            }
+            // Update color picker default value
+            const defaultColor = theme === 'light' ? '#f8f8f8' : '#1a1a1a';
+            document.getElementById('bgColorPicker').value = defaultColor;
+        }
+
+        // ==================== FULLSCREEN MANAGEMENT ====================
+        function toggleFullscreen() {
+            const appContainer = document.querySelector('.app-container');
+            isFullscreen = !isFullscreen;
+            appContainer.classList.toggle('fullscreen', isFullscreen);
+            updateFullscreenButtonText();
+            // Trigger resize to adjust canvas
+            setTimeout(() => {
+                window.dispatchEvent(new Event('resize'));
+            }, 100);
+        }
+
+        // ==================== BACKGROUND COLOR MANAGEMENT ====================
+        function setBackgroundColor(hexColor) {
+            if (scene) {
+                // Convert hex to Three.js color
+                const color = new THREE.Color(hexColor);
+                scene.background = color;
+            }
         }
 
         // ==================== APPLICATION INITIALIZATION ====================
         async function init() {
             await loadTranslations();
+
             // Create scene
             scene = new THREE.Scene();
+            // Initial background color based on default theme
             scene.background = new THREE.Color(0x1a1a1a);
-            scene.fog = new THREE.Fog(0x1a1a1a, 20, 100);
 
             // Il canvas potrebbe non essere dimensionato, usare il parent
             const canvas = document.getElementById('modelCanvas');
@@ -896,7 +1079,7 @@
             camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 1000);
             camera.position.set(0, 0, 5);
 
-            renderer = new THREE.WebGLRenderer({ 
+            renderer = new THREE.WebGLRenderer({
                 canvas: canvas,
                 antialias: true,
                 powerPreference: "high-performance"
@@ -931,16 +1114,25 @@
             scene.add(axesHelper);
 
             window.addEventListener('resize', onWindowResize);
-
             setupEventListeners();
-
             updateLanguage();
+
+            // Set initial theme from localStorage or default to dark
+            const savedTheme = localStorage.getItem('preferredTheme') || 'dark';
+            document.getElementById('themeSelector').value = savedTheme;
+            setTheme(savedTheme);
 
             animate();
         }
 
         // ==================== EVENT LISTENERS ====================
         function setupEventListeners() {
+            document.getElementById('themeSelector').addEventListener('change', (e) => {
+                const theme = e.target.value;
+                setTheme(theme);
+                localStorage.setItem('preferredTheme', theme);
+            });
+
             document.getElementById('languageSelector').addEventListener('change', (e) => {
                 currentLanguage = e.target.value;
                 updateLanguage();
@@ -958,11 +1150,11 @@
                 e.preventDefault();
                 dropArea.classList.add('dragover');
             });
-            
+
             dropArea.addEventListener('dragleave', () => {
                 dropArea.classList.remove('dragover');
             });
-            
+
             dropArea.addEventListener('drop', (e) => {
                 e.preventDefault();
                 dropArea.classList.remove('dragover');
@@ -978,13 +1170,13 @@
                 setView('front');
                 updateViewButtonLabels();
             });
-            
+
             document.getElementById('viewTop').addEventListener('click', () => {
                 viewStates.top = !viewStates.top;
                 setView('top');
                 updateViewButtonLabels();
             });
-            
+
             document.getElementById('viewSide').addEventListener('click', () => {
                 viewStates.side = !viewStates.side;
                 setView('side');
@@ -999,20 +1191,33 @@
             document.getElementById('zoomOut').addEventListener('click', () => zoomCamera(1.2));
             document.getElementById('resetView').addEventListener('click', resetCamera);
 
+            // Aggiunto listener per il bottone fullscreen
+            document.getElementById('fullscreenToggle').addEventListener('click', toggleFullscreen);
+
+            document.getElementById('bgColorPicker').addEventListener('input', (e) => {
+                setBackgroundColor(e.target.value);
+            });
+
             document.addEventListener('keydown', (e) => {
+                // Prevent default behavior for F11 (browser fullscreen)
+                if (e.key === 'F11') {
+                    e.preventDefault();
+                    toggleFullscreen();
+                }
+
                 switch(e.key.toLowerCase()) {
                     case 'r': resetCamera(); break;
-                    case 'f': 
+                    case 'f':
                         viewStates.front = !viewStates.front;
                         setView('front');
                         updateViewButtonLabels();
                         break;
-                    case 't': 
+                    case 't':
                         viewStates.top = !viewStates.top;
                         setView('top');
                         updateViewButtonLabels();
                         break;
-                    case 's': 
+                    case 's':
                         viewStates.side = !viewStates.side;
                         setView('side');
                         updateViewButtonLabels();
@@ -1030,7 +1235,6 @@
 
         function handleFile(file) {
             const lang = translations[currentLanguage] || translations.en;
-            
             if (!file.name.match(/\.(gltf|glb)$/i)) {
                 alert(lang.invalidFileMessage || 'Please select a .gltf or .glb file');
                 return;
@@ -1038,7 +1242,7 @@
 
             showLoading(true);
             const reader = new FileReader();
-            
+
             reader.onload = function(event) {
                 try {
                     // Distinguere .gltf (JSON) e .glb (binario)
@@ -1054,12 +1258,12 @@
                     showLoading(false);
                 }
             };
-            
+
             reader.onerror = function() {
                 alert(lang.fileReadError || 'Error reading file');
                 showLoading(false);
             };
-            
+
             reader.readAsArrayBuffer(file);
         }
 
@@ -1073,28 +1277,27 @@
             const loader = new THREE.GLTFLoader();
             loader.parse(data, '', (gltf) => {
                 currentModel = gltf.scene;
-                
+
                 // Center model
                 const box = new THREE.Box3().setFromObject(currentModel);
                 const center = box.getCenter(new THREE.Vector3());
                 const size = box.getSize(new THREE.Vector3()).length();
-                
                 currentModel.position.x -= center.x;
                 currentModel.position.y -= center.y;
                 currentModel.position.z -= center.z;
-                
+
                 camera.position.z = size * 1.5;
                 controls.target.set(0, 0, 0);
-                
+
                 scene.add(currentModel);
-                
+
                 modelInfo = {
                     name: fileName,
                     vertices: countVertices(currentModel),
                     faces: countFaces(currentModel),
                     fileSize: formatFileSize(fileSize)
                 };
-                
+
                 updateModelInfo();
                 showLoading(false);
                 controls.reset();
@@ -1153,28 +1356,28 @@
             const canvas = renderer.domElement;
             const container = canvas.parentElement;
             const aspect = container.clientWidth / container.clientHeight;
-            
             let newCamera;
-            
+
             if (isOrthographic) {
                 const frustumSize = 10;
                 newCamera = new THREE.OrthographicCamera(
-                    frustumSize * aspect / -2, 
-                    frustumSize * aspect / 2, 
-                    frustumSize / 2, 
-                    frustumSize / -2, 
-                    0.1, 
+                    frustumSize * aspect / -2,
+                    frustumSize * aspect / 2,
+                    frustumSize / 2,
+                    frustumSize / -2,
+                    0.1,
                     1000
                 );
             } else {
                 newCamera = new THREE.PerspectiveCamera(45, aspect, 0.1, 1000);
             }
-            
+
             newCamera.position.copy(camera.position);
             newCamera.rotation.copy(camera.rotation);
             newCamera.zoom = camera.zoom;
-            
+
             camera = newCamera;
+
             controls.dispose();
             controls = new THREE.OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
@@ -1182,48 +1385,48 @@
             controls.screenSpacePanning = false;
             controls.minDistance = 1;
             controls.maxDistance = 50;
-            
+
             camera.updateProjectionMatrix();
         }
 
         function setView(view) {
             if (!currentModel) return;
-            
+
             const box = new THREE.Box3().setFromObject(currentModel);
             const size = box.getSize(new THREE.Vector3()).length();
             const distance = size * 2;
-            
+
             switch(view) {
                 case 'front':
                     camera.position.set(
-                        0, 
-                        0, 
+                        0,
+                        0,
                         viewStates.front ? -distance : distance
                     );
                     break;
                 case 'top':
                     camera.position.set(
-                        0, 
-                        viewStates.top ? -distance : distance, 
+                        0,
+                        viewStates.top ? -distance : distance,
                         0
                     );
                     break;
                 case 'side':
                     camera.position.set(
-                        viewStates.side ? -distance : distance, 
-                        0, 
+                        viewStates.side ? -distance : distance,
+                        0,
                         0
                     );
                     break;
             }
-            
+
             camera.lookAt(0, 0, 0);
             controls.update();
         }
 
         function rotateModel(axis) {
             if (!currentModel) return;
-            
+
             const rotationAmount = Math.PI / 4;
             switch(axis) {
                 case 'x':
@@ -1253,9 +1456,8 @@
                 top: false,
                 side: false
             };
-            
             updateViewButtonLabels();
-            
+
             if (currentModel) {
                 const box = new THREE.Box3().setFromObject(currentModel);
                 const size = box.getSize(new THREE.Vector3()).length();
@@ -1263,7 +1465,7 @@
             } else {
                 camera.position.set(0, 0, 5);
             }
-            
+
             camera.lookAt(0, 0, 0);
             controls.reset();
         }
@@ -1274,9 +1476,9 @@
             const container = canvas.parentElement;
             const width = container.clientWidth;
             const height = container.clientHeight;
-            
+
             camera.aspect = width / height;
-            
+
             if (isOrthographic) {
                 const frustumSize = 10;
                 camera.left = frustumSize * width / height / -2;
@@ -1284,7 +1486,7 @@
                 camera.top = frustumSize / 2;
                 camera.bottom = -frustumSize / 2;
             }
-            
+
             camera.updateProjectionMatrix();
             renderer.setSize(width, height);
         }
