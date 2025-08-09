@@ -1,7 +1,7 @@
 # Simple-viewer-3D-glTF
  3D GLTF Viewer for CAD View and manipulate 3D glTF/glb models a standalone HTML5 working on Browser
 
-## This is the viewer running on the descktop browser:
+## This is the viewer running on the desktop browser:
 <img width="1483" height="723" alt="image" src="https://github.com/user-attachments/assets/d5e4350c-b9f1-4b46-a1e9-ab23c24caf32" />
 
 ## This is the viewer running on the smartphone browser:
